@@ -1,0 +1,33 @@
+import pandas as pd
+from sklearn.svm import SVC
+
+# --- ЗАГРУЗКА ДАННЫХ ИЗ ВАШЕГО РЕПОЗИТОРИЯ ---
+url = "https://raw.githubusercontent.com/Sazankova/svm/main/svm-data.csv"
+
+# Загружаем данные (в файле нет заголовков)
+data = pd.read_csv(url, header=None)
+
+# --- РАЗДЕЛЯЕМ ПРИЗНАКИ И ЦЕЛЕВУЮ ПЕРЕМЕННУЮ ---
+# Целевая переменная в первом столбце (индекс 0)
+# Признаки — во втором и третьем столбцах (индексы 1 и 2)
+X = data[[1, 2]].values
+y = data[0].values
+
+# --- ОБУЧАЕМ SVM С ЛИНЕЙНЫМ ЯДРОМ ---
+# C = 100000, kernel='linear', random_state=241
+svm = SVC(C=100000, kernel='linear', random_state=241)
+svm.fit(X, y)
+
+# --- ПОЛУЧАЕМ НОМЕРА ОПОРНЫХ ОБЪЕКТОВ ---
+# support_ возвращает индексы (начинаются с 0)
+support_indices = svm.support_
+
+# Преобразуем в нумерацию с 1 (как требуется в задании)
+support_numbers = [i + 1 for i in support_indices]
+
+# Сортируем в возрастающем порядке
+support_numbers.sort()
+
+# --- ВЫВОДИМ ОТВЕТ ---
+# Номера через запятую без пробелов
+print(','.join(map(str, support_numbers)))
